@@ -29,20 +29,20 @@ else:
 
 def do_FilteringStreams():
     if (FormatType == 1):
-        stream1080 = url.streams.filter(
-            res="1080p", mime_type="video/mp4")
-        stream720 = url.streams.filter(
-            res="720p", mime_type="video/mp4", )
-        stream480 = url.streams.filter(
-            res="480p", mime_type="video/mp4", )
-        stream360 = url.streams.filter(
-            res="360p", mime_type="video/mp4", )
+        stream1080 = url.streams.filter(progressive=True,
+                                        file_extension='mp4').order_by('resolution').desc()
+        stream720 = url.streams.filter(progressive=True,
+                                       res="720p", mime_type="video/mp4", )
+        stream480 = url.streams.filter(progressive=True,
+                                       res="480p", mime_type="video/mp4", )
+        stream360 = url.streams.filter(progressive=True,
+                                       res="360p", mime_type="video/mp4", )
         if (fvalue == 1):
             try:
                 stream1080.first().download(downloads_path)
                 print("download done check " + downloads_path)
             except:
-                print("Oops! That video can't download in 1080p. Try again...")
+                print("Oops! That video can't download in 1080p. Try again lower Res...")
         elif (fvalue == 2):
             try:
                 stream720.first().download(downloads_path)
