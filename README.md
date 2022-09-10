@@ -13,7 +13,7 @@ This program helps you to download any video on Youtube in the format you chose,
 Install my-project with the exe file on the realse page 
 
 ```bash
-  https://github.com/HolakoNoob/Pc-Outro/releases/tag/beta
+  https://github.com/HolakoNoob/Youtube-Downloader-GUI/releases/tag/v0.1
 ```
     
 ## 🚀 About Me
