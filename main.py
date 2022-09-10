@@ -82,3 +82,5 @@ def do_FilteringStreams():
 do_FilteringStreams()
 print('###############################################')
 os.system('cmd /k "PAUSE"')
+os.system('cmd /k "EXIT"')
+
