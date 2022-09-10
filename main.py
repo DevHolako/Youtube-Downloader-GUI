@@ -1,55 +1,84 @@
-#import Modules
-import tkinter as tk
-from tkinter import *
+# import Modules
 from pytube import YouTube
-from tkinter import filedialog, messagebox
+import os
+import sys
+# url
+url = YouTube(input("type your url here : "))
+base_path = os.path.expanduser('~')
+downloads_path = os.path.join(base_path, 'Downloads/output')
+print('###############################################')
+print('###############################################')
 
 
-def GUIfunction():
-    link_Label = Label(root, text="Youtube URL : ", bg="#F8F8F2")
-    link_Label.grid(row=1, column=0, pady=5, padx=5)
+# choing formats
+print('Choose your format : ')
+print('For video format type 1')
+print('For audio format type 2')
+FormatType = int(input("... : > "))
+formats = ['1080', '720', '480', '360']
+if (FormatType == 1):
+    print('Choose your video format :')
+    for i, f in enumerate(formats):
+        print(f'for {f} type :{i+1}')
+    fvalue = int(input('... : '))
+else:
+    fvalue = 0
 
-    root.link_text = Entry(root, width=60, textvariable=vedio_link)
-    root.link_text.grid(row=1, column=1, pady=5, padx=5)
-
-    destination_Label = Label(root, text="Destination", bg="#F8F8F2")
-    destination_Label.grid(row=2, column=0, pady=5, padx=5)
-
-    root.destination_text = Entry(root, width=45, textvariable=download_path)
-    root.destination_text.grid(row=2, column=1, pady=3, padx=3)
-
-    browse_btn = Button(root, text="Browse...",
-                        command=browse, width=10, bg="#F8F8F2")
-    browse_btn.grid(row=2, column=2, pady=1, padx=1)
-
-    download_btn = Button(root, text="Download",
-                          command=download_vedio, width=10, bg="#F8F8F2")
-    download_btn.grid(row=3, column=1, pady=3, padx=3)
+# main func
 
 
-def browse():
-    download_dir = filedialog.askdirectory(initialdir="Your Directory Path")
-    download_path.set(download_dir)
+def do_FilteringStreams():
+    if (FormatType == 1):
+        stream1080 = url.streams.filter(
+            res="1080p", mime_type="video/mp4")
+        stream720 = url.streams.filter(
+            res="720p", mime_type="video/mp4", )
+        stream480 = url.streams.filter(
+            res="480p", mime_type="video/mp4", )
+        stream360 = url.streams.filter(
+            res="360p", mime_type="video/mp4", )
+        if (fvalue == 1):
+            try:
+                stream1080.first().download(downloads_path)
+                print("download done check " + downloads_path)
+            except:
+                print("Oops! That video can't download in 1080p. Try again...")
+        elif (fvalue == 2):
+            try:
+                stream720.first().download(downloads_path)
+                print("download done check " + downloads_path)
+            except:
+                print("Oops! That video can't download in 720p. Try again..")
+        elif (fvalue == 3):
+            try:
+                stream480.first().download(downloads_path)
+                print("download done check " + downloads_path)
+            except:
+                print("Oops! That video can't download in 480p. Try again...")
+        elif (fvalue == 4):
+            try:
+                stream360.first().download(downloads_path)
+                print("download done check " + downloads_path)
+            except:
+                print("Oops! That video can't download in 360p. Try again..")
+        else:
+            print("You didn't choose your format resolution")
+    elif (FormatType == 2):
+        audioStream = url.streams.filter(only_audio=True)
+        try:
+            out_file = audioStream.first().download(output_path=downloads_path)
+            base, ext = os.path.splitext(out_file)
+            new_file = base + '.mp3'
+            os.rename(out_file, new_file)
+            print("download done check " + downloads_path)
+
+        except:
+            print("Oops! That audio can't be downloaded. Try again...")
+    else:
+        print('You chose the wrong option!')
 
 
-def download_vedio():
-    url = vedio_link.get()
-    folder = download_path.get()
-
-    get_vd = YouTube(url)
-    get_stream = get_vd.streams.get_highest_resolution()
-    get_stream.download(folder)
-    messagebox.showinfo(title="Status", message="Download finished !!")
-
-
-root = tk.Tk()
-root.geometry("650x120")
-root.resizable(False, False)
-root.title("YouTube Gruber")
-root.config(background="#282C34")
-
-vedio_link = StringVar()
-download_path = StringVar()
-GUIfunction()
-
-root.mainloop()
+# calling the main func
+do_FilteringStreams()
+print('###############################################')
+os.system('cmd /k "PAUSE"')
